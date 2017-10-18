@@ -5,11 +5,18 @@ android {
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.tools.xxf.ijkplayer"
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 设置支持的SO库架构
+
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+
+        }
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -17,6 +24,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {
@@ -27,4 +36,18 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
+
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.4'
+
+    compile 'com.github.ctiao:DanmakuFlameMaster:0.9.12'
+    compile 'com.github.ctiao:ndkbitmap-armv7a:0.9.12'
+
+    compile 'com.github.ctiao:ndkbitmap-armv5:0.9.12'
+    compile 'com.github.ctiao:ndkbitmap-x86:0.9.12'
 }
