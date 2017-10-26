@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="vdieo_play_view_normal_height">200dp</dimen>
+    <dimen name="player_overlay_height">48dp</dimen>
+    <dimen name="player_end_image_size">48dp</dimen>
+    <dimen name="normal_margin">16dp</dimen>
 </resources>

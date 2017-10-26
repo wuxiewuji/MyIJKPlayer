@@ -2,8 +2,6 @@ package com.tools.xxf.ijkplayer;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.net.Uri;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -11,19 +9,19 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tools.xxf.ijkplayer.common.PlayerManager;
+import com.tools.xxf.ijkplayer.widget.MediaController;
+import com.tools.xxf.ijkplayer.widget.MyPlayerManager;
 import com.tools.xxf.ijkplayer.widget.media.AndroidMediaController;
 import com.tools.xxf.ijkplayer.widget.media.IjkVideoView;
 
-public class MainActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener {
+public class MainActivity extends AppCompatActivity implements MyPlayerManager.PlayerStateListener {
 
     private IjkVideoView videoView;
-    private PlayerManager player;
+    private MyPlayerManager player;
     private FrameLayout ffView;
     private LinearLayout view;
 
@@ -34,34 +32,24 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
 
         ffView = (FrameLayout) findViewById(R.id.ffplayer);
         videoView = (IjkVideoView) findViewById(R.id.video_view);
+        MediaController mediaController = (MediaController) findViewById(R.id.media_controller);
+        videoView.setMediaController(mediaController);
         view = (LinearLayout) findViewById(R.id.view);
-
-        player = new PlayerManager(this);
+        player = new MyPlayerManager(this);
         player.setScaleType(PlayerManager.SCALETYPE_FILLPARENT);
-        player.playInFullScreen(false);
         player.setPlayerStateListener(this);
+        player.setMediaController(mediaController);
         player.play("http://221.4.223.101:8000/media/49_720p.flv");
+        videoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
 
+                Log.i("show", "show");
+                return player.gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.back://返回控件
-                break;
-            case R.id.full://全屏设置
-                onExpendScreen();
-                break;
-            case R.id.player://暂停，播放
-                if (player.isPlaying()) {
-                    player.onPause();
-                } else {
-                    player.start();
-                }
-                break;
-            default:
-                break;
-        }
-    }
 
     private int getScreenOrientation() {
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -139,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ffView.getLayoutParams();
             if (0 == playerNormalHeight)
                 playerNormalHeight = params.height;
-            params.height =LinearLayout.LayoutParams.MATCH_PARENT;
+            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
             ffView.requestLayout();
 
         } else {
@@ -153,13 +141,6 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (player.gestureDetector.onTouchEvent(event))
-            return true;
-        return super.onTouchEvent(event);
     }
 
     @Override

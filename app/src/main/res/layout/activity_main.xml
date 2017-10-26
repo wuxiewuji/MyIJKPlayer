@@ -13,7 +13,7 @@
     <FrameLayout
         android:id="@+id/ffplayer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/vdieo_play_view_normal_height"
+        android:layout_height="200dp"
         android:fitsSystemWindows="false">
 
         <com.tools.xxf.ijkplayer.widget.media.IjkVideoView
@@ -21,14 +21,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-
-        <include layout="@layout/controller_layout"/>
+        <com.tools.xxf.ijkplayer.widget.MediaController
+            android:id="@+id/media_controller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </FrameLayout>
 
     <TextView
         android:id="@+id/txt"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/backcontroller_color"
         android:visibility="gone"/>
 

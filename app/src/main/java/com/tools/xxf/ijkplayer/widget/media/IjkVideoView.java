@@ -33,10 +33,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.MediaController;
-
-import com.tools.xxf.ijkplayer.common.PlayerManager;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +44,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.TextureMediaPlayer;
 
-public class IjkVideoView extends FrameLayout implements MediaController.MediaPlayerControl {
+public class IjkVideoView extends FrameLayout implements android.widget.MediaController.MediaPlayerControl {
     private String TAG = "IjkVideoView";
     // settable by the client
     private Uri mUri;
@@ -62,7 +58,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     public static final int STATE_PLAYING = 3;
     public static final int STATE_PAUSED = 4;
     public static final int STATE_PLAYBACK_COMPLETED = 5;
-    private PlayerManager playerManager;
 
     public int getCurrentState() {
         return mCurrentState;
@@ -706,21 +701,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
             am.abandonAudioFocus(null);
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (null != playerManager && playerManager.gestureDetector.onTouchEvent(ev)) {
-            return true;
-        } else if (isInPlaybackState() && mMediaController != null) {
-            toggleMediaControlsVisiblity();
-        }
-
-        return false;
-    }
-
-    public void setPlayerManager(PlayerManager player) {
-        playerManager = player;
     }
 
 

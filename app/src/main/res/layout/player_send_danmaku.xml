@@ -1,0 +1,160 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/danmaku_send_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/overlay_bg_color"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/danmaku_layout_a"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            style="@style/danmaku_setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_danmaku_setting_p"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_style_roll"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/position_gundong_normal"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_style_top"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/position_up_normal"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_style_bottom"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/position_down_normal"
+            />
+
+        <TextView
+            style="@style/danmaku_setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_danmaku_setting_c"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_color"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/color_all"
+            />
+
+        <TextView
+            style="@style/danmaku_setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_danmaku_setting_t"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_t_big"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/text_big_normal"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_t_normal"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/text_zhong_normal"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_t_small"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/text_small_normal"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/danmaku_layout_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/danmaku_color_back"
+            style="@style/danmaku_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/normal_margin"
+            android:src="@drawable/icon_color_fanhui"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/danmaku_color_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/normal_margin">
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#ffd2d2d2"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:id="@+id/danmaku_edit"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:focusableInTouchMode="true"
+            android:imeOptions="actionSend"
+            />
+
+        <ImageView
+            android:id="@+id/danmaku_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/sel_send_danmaku_btn"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

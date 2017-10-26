@@ -1,0 +1,51 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_end_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/overlay_bg_color"
+    >
+
+    <ImageView
+        android:id="@+id/player_end_center"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_centerInParent="true"/>
+
+
+    <ImageView
+        android:id="@+id/player_end_replay"
+        android:layout_width="@dimen/player_end_image_size"
+        android:layout_height="@dimen/player_end_image_size"
+        android:layout_above="@id/player_end_center"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_play_again"
+        />
+
+    <TextView
+        style="@style/player_end_text"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/player_end_image_size"
+        android:layout_above="@id/player_end_center"
+        android:layout_toRightOf="@id/player_end_replay"
+        android:text="@string/text_replay"/>
+
+    <ImageView
+        android:id="@+id/player_end_next"
+        android:layout_width="@dimen/player_end_image_size"
+        android:layout_height="@dimen/player_end_image_size"
+        android:layout_below="@id/player_end_center"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_next"
+        />
+
+    <TextView
+        style="@style/player_end_text"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/player_end_image_size"
+        android:layout_below="@id/player_end_center"
+        android:layout_toRightOf="@id/player_end_next"
+        android:text="@string/text_play_next"/>
+
+
+</RelativeLayout>
