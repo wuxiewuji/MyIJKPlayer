@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/top_ln"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/player_overlay_height"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="12dp"
@@ -56,14 +56,14 @@
         android:layout_alignParentBottom="true"
         android:background="@color/overlay_bg_color"
         android:orientation="horizontal"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp">
+        >
 
         <ImageView
             android:id="@+id/pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:padding="4dp"
             android:src="@drawable/icon_play"
             />
 
@@ -102,6 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:padding="4dp"
             android:src="@drawable/icon_quanping"
             />
 

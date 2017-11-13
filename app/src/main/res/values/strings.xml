@@ -52,7 +52,6 @@
     <string name="text_danmaku_setting_t">T</string>
 
 
-
     <!-- Shown on transport control of lockscreen. Pressing button goes to previous track. -->
     <string name="lockscreen_transport_prev_description">Previous track</string>
     <!-- Shown on transport control of lockscreen. Pressing button goes to next track. -->
@@ -67,4 +66,6 @@
     <string name="lockscreen_transport_rew_description">Rewind</string>
     <!-- Shown on transport control screens. Pressing button fast forwards playback [CHAR LIMIT=NONE]-->
     <string name="lockscreen_transport_ffw_description">Fast forward</string>
+
+    <string name="unseekable_stream">Unseekable stream</string>
 </resources>

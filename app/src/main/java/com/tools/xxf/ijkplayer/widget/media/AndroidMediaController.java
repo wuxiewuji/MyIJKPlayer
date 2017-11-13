@@ -88,4 +88,9 @@ public class AndroidMediaController extends MediaController implements IMediaCon
         view.setVisibility(View.VISIBLE);
         show();
     }
+
+    @Override
+    public void setFull(boolean isFull) {
+
+    }
 }

@@ -1,0 +1,27 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_forward_rewind_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/overlay_bg_color"
+    android:gravity="center"
+    >
+
+    <ImageView
+        android:id="@+id/player_forward_rewind_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/play_kuaijin"
+        />
+
+    <TextView
+        android:id="@+id/player_forward_rewind_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player_forward_rewind_image"
+        android:gravity="center"
+        android:textColor="@color/white"
+        />
+
+</RelativeLayout>

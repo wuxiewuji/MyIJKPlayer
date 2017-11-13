@@ -19,8 +19,6 @@ package com.tools.xxf.ijkplayer.widget.media;
 
 import android.view.View;
 
-import com.tools.xxf.ijkplayer.widget.MediaController;
-
 public interface IMediaController {
     void hide();
 
@@ -40,4 +38,7 @@ public interface IMediaController {
     // Extends
     //----------
     void showOnce(View view);
+
+    //是否全屏
+    void setFull(boolean isFull);
 }

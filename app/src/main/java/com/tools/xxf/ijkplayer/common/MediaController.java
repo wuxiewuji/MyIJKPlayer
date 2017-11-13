@@ -1,16 +1,22 @@
-package com.tools.xxf.ijkplayer.widget;
+package com.tools.xxf.ijkplayer.common;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.IdRes;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,11 +30,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.tools.xxf.ijkplayer.R;
+import com.tools.xxf.ijkplayer.utils.AndroidDevices;
+import com.tools.xxf.ijkplayer.utils.AndroidUtil;
+import com.tools.xxf.ijkplayer.utils.MyLogger;
 import com.tools.xxf.ijkplayer.widget.media.IMediaController;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.Locale;
+
+import static com.tools.xxf.ijkplayer.utils.TimeUtils.stringForTime;
 
 
 /**
@@ -40,18 +50,19 @@ import java.util.Locale;
 public class MediaController extends RelativeLayout implements IMediaController {
     private final int HIDE_Controller = 0;
     public static final String TAG = "MediaController";
+    MyLogger logger = MyLogger.getXiongFengLog();
     private ArrayList<View> childs = new ArrayList<>();
     private RelativeLayout topLn;//顶部控件
     private LinearLayout bottomLn;//底部控件
     private boolean mShowing;
+    float startx;
+    float starty;
     private static final int sDefaultTimeout = 3000;
     private boolean mDragging;
 
     private android.widget.MediaController.MediaPlayerControl mPlayer;
     private Context mContext;
     private SeekBar seekBar;
-    private StringBuilder mFormatBuilder;
-    private Formatter mFormatter;
     private TextView mEndTime;
     private TextView mCurrentTime;
     private ImageView mPauseButton;
@@ -60,12 +71,14 @@ public class MediaController extends RelativeLayout implements IMediaController 
     private ImageView playBack;
     private ImageView showDanMu;
     private boolean isMove = false;
-    private OnClickListener playBackListener;
     private ImageView fullBtn;
     private ImageView addBtn;
     private ImageView shareBtn;
     private MediaControllerListener mediaListener;
-
+    private float movex;
+    private float movey;
+    private double moves;
+    private boolean isFull;
 
     public MediaController(Context context) {
         this(context, null);
@@ -81,6 +94,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
     }
 
     private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+        this.isInEditMode();
         mContext = context;
         Resources res = mContext.getResources();
         setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -104,8 +118,6 @@ public class MediaController extends RelativeLayout implements IMediaController 
         addBtn = findViewById(R.id.video_add);
         shareBtn = findViewById(R.id.video_share);
 
-        mFormatBuilder = new StringBuilder();
-        mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
 
         //事件拦截，重置关闭控件操作
         bottomLn.setOnTouchListener(new OnTouchListener() {
@@ -123,10 +135,11 @@ public class MediaController extends RelativeLayout implements IMediaController 
         childs.add(addBtn);
         childs.add(shareBtn);
         initListener();
-
+        int height = getHeight();
+        Log.i(TAG, "height=" + height);
     }
 
-    //监听事件
+    //监听事件,通过控件的触摸事件,拦截事件发送到父布局,并处理当前控件的点击事件
     private void initListener() {
         for (View child : childs) {
             child.setOnTouchListener(new OnTouchListener() {
@@ -136,9 +149,17 @@ public class MediaController extends RelativeLayout implements IMediaController 
                         case MotionEvent.ACTION_DOWN:
                             show(0);
                             isMove = false;
+                            startx = event.getX();
+                            starty = event.getY();
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            isMove = true;
+                            movex = event.getX() - startx;
+                            movey = event.getY() - starty;
+                            //noinspection ResultOfMethodCallIgnored
+                            moves = Math.sqrt(Math.pow(movex, 2) + Math.pow(movey, 2));
+                            if (moves > 24) {//触摸范围值
+                                isMove = true;
+                            }
                             break;
                         case MotionEvent.ACTION_UP:
                             show(sDefaultTimeout);
@@ -158,16 +179,13 @@ public class MediaController extends RelativeLayout implements IMediaController 
         }
 
         if (seekBar != null) {
-            if (seekBar instanceof SeekBar) {
-                SeekBar seeker = (SeekBar) seekBar;
-                seeker.setOnSeekBarChangeListener(mSeekListener);
-            }
+            SeekBar seeker = seekBar;
+            seeker.setOnSeekBarChangeListener(mSeekListener);
         }
     }
 
     //控件的点击事件
     private void setViewListener(View v) {
-
 
         switch (v.getId()) {
             case R.id.pause://开启暂停
@@ -231,6 +249,8 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     //关闭当前控件
     private void hideController() {
+        if (isFull)
+            dimStatusBar(true);
         AnimatorSet animatorSet = new AnimatorSet();//组合动画
         ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 1f, 0f);
         ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), -topLn
@@ -239,7 +259,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
         ObjectAnimator translationDown = ObjectAnimator.ofFloat(bottomLn, "Y", bottomLn.getY(),
                 bottomLn.getY() + bottomLn.getHeight());
 
-        animatorSet.setDuration(500);
+        animatorSet.setDuration(300);
         animatorSet.setInterpolator(new DecelerateInterpolator());
         animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
         animatorSet.start();
@@ -248,6 +268,11 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     //开启当前控件
     public void showController() {
+
+        if (isFull) {
+            dimStatusBar(false);
+        }
+
         AnimatorSet animatorSet = new AnimatorSet();//组合动画
         ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 0f, 1f);
         ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), topLn
@@ -256,10 +281,95 @@ public class MediaController extends RelativeLayout implements IMediaController 
         ObjectAnimator translationDown = ObjectAnimator.ofFloat(bottomLn, "Y", bottomLn.getY(),
                 getHeight() - bottomLn.getHeight());
 
-        animatorSet.setDuration(500);
+        animatorSet.setDuration(300);
         animatorSet.setInterpolator(new DecelerateInterpolator());
         animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
         animatorSet.start();
+    }
+
+    /**
+     * dip 转 px
+     *
+     * @param dip
+     * @return
+     */
+    public int dip2px(int dip) {
+        //
+        // 公式： dp = px / (dpi / 160) px = dp * (dpi / 160)
+        // dp = px / denisity
+        // px = dp * denisity;
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        float density = metrics.density;
+        return (int) (dip * density + 0.5f);
+    }
+
+    /**
+     * Dim the status bar and/or navigation icons when needed on Android 3.x.
+     * Hide it on Android 4.0 and later
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void dimStatusBar(boolean dim) {
+        logger.i("dimStatusBar=" + dim);
+
+        if (!AndroidUtil.isHoneycombOrLater)
+            return;
+        int visibility = 0;
+        int navbar = 0;
+
+        if (AndroidUtil.isJellyBeanOrLater) {
+            visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+            if (isFull)
+                navbar = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+        }
+        if (dim) {
+            ((Activity) mContext).getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if (AndroidUtil.isICSOrLater)
+                navbar |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
+            else
+                visibility |= View.STATUS_BAR_HIDDEN;
+            if (!AndroidDevices.hasCombBar()) {
+                navbar |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+                if (AndroidUtil.isKitKatOrLater)
+                    visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
+                if (AndroidUtil.isJellyBeanOrLater)
+                    visibility |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            }
+        } else {
+            ((Activity) mContext).getWindow().clearFlags(WindowManager.LayoutParams
+                    .FLAG_FULLSCREEN);
+            if (AndroidUtil.isICSOrLater)
+                visibility |= View.SYSTEM_UI_FLAG_VISIBLE;
+            else
+                visibility |= View.STATUS_BAR_VISIBLE;
+        }
+
+        if (AndroidDevices.hasNavBar())
+            visibility |= navbar;
+        ((Activity) mContext).getWindow().getDecorView().setSystemUiVisibility(visibility);
+    }
+
+    private int getDpi() {
+        int dpi = 0;
+        Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        @SuppressWarnings("rawtypes")
+        Class c;
+        try {
+            c = Class.forName("android.view.Display");
+            @SuppressWarnings("unchecked")
+            Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
+            method.invoke(display, dm);
+            dpi = dm.widthPixels;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        dm = new DisplayMetrics();
+        WindowManager windowManager = ((Activity) mContext).getWindowManager();
+        windowManager.getDefaultDisplay().getMetrics(dm);
+        if (dpi != 0) {
+            return dpi - dm.widthPixels;
+        }
+        return 0;
     }
 
     @Override
@@ -282,6 +392,8 @@ public class MediaController extends RelativeLayout implements IMediaController 
         return mShowing;
     }
 
+
+    //此处可手动设置当前布局的大小
     @Override
     public void setAnchorView(View view) {
 
@@ -302,7 +414,6 @@ public class MediaController extends RelativeLayout implements IMediaController 
         }
 
         setProgress();
-        Log.d(TAG, "show");
         updatePausePlay();
         post(mShowProgress);
         hanler.removeMessages(HIDE_Controller);
@@ -333,8 +444,8 @@ public class MediaController extends RelativeLayout implements IMediaController 
             if (!fromuser) {
                 return;
             }
-
-            mPlayer.seekTo(progress);
+            if (null != mPlayer)
+                mPlayer.seekTo(progress);
         }
 
         @Override
@@ -343,26 +454,26 @@ public class MediaController extends RelativeLayout implements IMediaController 
             setProgress();
             Log.d(TAG, "onStopTrackingTouch");
             show(sDefaultTimeout);
-
             post(mShowProgress);
         }
     };
 
     private void updatePausePlay() {
-        if (mPlayer.isPlaying()) {
-            mPauseButton.setImageResource(R.drawable.icon_play);
-            mPauseButton.setContentDescription(mPauseDescription);
-        } else {
-            mPauseButton.setImageResource(R.drawable.icon_zanting);
-            mPauseButton.setContentDescription(mPlayDescription);
-        }
+        if (null != mPlayer)
+            if (mPlayer.isPlaying()) {
+                mPauseButton.setImageResource(R.drawable.icon_play);
+                mPauseButton.setContentDescription(mPauseDescription);
+            } else {
+                mPauseButton.setImageResource(R.drawable.icon_zanting);
+                mPauseButton.setContentDescription(mPlayDescription);
+            }
     }
 
     private final Runnable mShowProgress = new Runnable() {
         @Override
         public void run() {
             int pos = setProgress();
-            if (!mDragging && mShowing && mPlayer.isPlaying()) {
+            if (!mDragging && mShowing && null != mPlayer && mPlayer.isPlaying()) {
                 postDelayed(mShowProgress, 1000 - (pos % 1000));
             }
         }
@@ -384,32 +495,35 @@ public class MediaController extends RelativeLayout implements IMediaController 
         return 0;
     }
 
-    private String stringForTime(int timeMs) {
-        int totalSeconds = timeMs / 1000;
-
-        int seconds = totalSeconds % 60;
-        int minutes = (totalSeconds / 60) % 60;
-        int hours = totalSeconds / 3600;
-
-        mFormatBuilder.setLength(0);
-        if (hours > 0) {
-            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
-        } else {
-            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
-        }
-    }
 
     @Override
     public void showOnce(View view) {
 
     }
 
-    private void doPauseResume() {
-        if (mPlayer.isPlaying()) {
-            mPlayer.pause();
-        } else {
-            mPlayer.start();
+    @Override
+    public void setFull(boolean isFull) {
+        this.isFull = isFull;
+        if (topLn != null) {
+            RelativeLayout.LayoutParams params = (LayoutParams) topLn.getLayoutParams();
+            if (isScreenOriatationPortrait(mContext)){
+                params.topMargin = dip2px(12 + 36);
+                dimStatusBar(false);
+            }else {
+                params.topMargin = dip2px(12);
+            }
         }
+    }
+    public static boolean isScreenOriatationPortrait(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+    private void doPauseResume() {
+        if (mPlayer != null)
+            if (mPlayer.isPlaying()) {
+                mPlayer.pause();
+            } else {
+                mPlayer.start();
+            }
     }
 
 

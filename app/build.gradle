@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 26
@@ -13,7 +14,7 @@ android {
         ndk {
             // 设置支持的SO库架构
 
-            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+//            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
 
         }
         multiDexEnabled true
@@ -33,21 +34,25 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+
+
+
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-
     compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
     compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
-
     compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.4'
     compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.4'
     compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.4'
     compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.4'
-
     compile 'com.github.ctiao:DanmakuFlameMaster:0.9.12'
     compile 'com.github.ctiao:ndkbitmap-armv7a:0.9.12'
-
     compile 'com.github.ctiao:ndkbitmap-armv5:0.9.12'
     compile 'com.github.ctiao:ndkbitmap-x86:0.9.12'
+    testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
