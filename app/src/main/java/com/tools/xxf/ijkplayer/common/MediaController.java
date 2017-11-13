@@ -510,7 +510,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
                 params.topMargin = dip2px(12 + 36);
                 dimStatusBar(false);
             }else {
-                params.topMargin = dip2px(12);
+                params.topMargin = dip2px(12+24);
             }
         }
     }
