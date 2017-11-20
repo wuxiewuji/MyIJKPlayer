@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tools.xxf.ijkplayer.ui.fonticon.FontIconDemo">
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="#22000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:text="I {fa-heart-o} to {fa-code} on {fa-compress}"
+        android:textColor="#FF00ff"
+        android:textSize="40sp"
+        />
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:shadowColor="#22000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:text="{ijk-full-max} {ijk-play} {ijk-stop} {ijk-full-narrow}
+{ijk-danma-Roll-on} {ijk-danma-Roll-off}
+{ijk-danma-on} {ijk-setting} {ijk-collect-solid}"
+        android:textColor="#FF00ff"
+        android:textSize="40sp"
+        />
+</LinearLayout>

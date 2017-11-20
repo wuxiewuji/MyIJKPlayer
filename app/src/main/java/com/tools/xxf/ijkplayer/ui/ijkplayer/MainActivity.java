@@ -1,5 +1,6 @@
-package com.tools.xxf.ijkplayer.ui;
+package com.tools.xxf.ijkplayer.ui.ijkplayer;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,12 +12,12 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.tools.xxf.ijklib.common.MediaController;
+import com.tools.xxf.ijklib.common.PlayerManager;
+import com.tools.xxf.ijklib.media.IjkVideoView;
+import com.tools.xxf.ijklib.utils.MyLogger;
 import com.tools.xxf.ijkplayer.R;
-import com.tools.xxf.ijkplayer.common.MediaController;
-import com.tools.xxf.ijkplayer.common.PlayerManager;
-import com.tools.xxf.ijkplayer.common.PlayerManager.*;
-import com.tools.xxf.ijkplayer.utils.MyLogger;
-import com.tools.xxf.ijkplayer.widget.media.IjkVideoView;
 
 /**
  * TODO:播放器完成版本
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
         player.setMediaController(mediaController);
         player.setScaleType(PlayerManager.SCALETYPE_FILLPARENT);
         player.setPlayerStateListener(this);
-        player.play("http://221.4.223.101:8000/media/49_720p.flv");
+        player.play("http://118.123.164.114/6563BECB7A31713372922FEB/03000A07005A08169A0CD1011BA6A9D4E0BDC9-C4CC-7FFA-0E3D-3DAD2404112A.mp4?ali_redirect_domain=vali-dns.cp31.ott.cibntv.net&ccode=0502&duration=391&expire=18000&psid=d7ccee34273d6b877d1a6776dc826aa7&ups_client_netip=65ccf74b&ups_ts=1511166202&ups_userid=&utid=JGxFEZ5Q1FUCAWXM90vyinw8&vid=XMzA5NzkxNTYzMg%3D%3D&vkey=A1652dc1b822ebc1a3a58d021fb9dc8c4");
 
         initListener();
 
@@ -87,16 +88,16 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
                 }
             });
         //当前控件滑动事件,声音,亮度,快进等
-        player.setScrollTextListener(new ScrollTextListener() {
+        player.setScrollTextListener(new PlayerManager.ScrollTextListener() {
             //进度
             @Override
-            public void showSeekRewindInfo(FRtype type, String s) {
+            public void showSeekRewindInfo(PlayerManager.FRtype type, String s) {
                 showForwardRewindInfo(type, s);
             }
 
             //声音
             @Override
-            public void showVolBrightnessInfo(VBtype type, int progress, int lenght) {
+            public void showVolBrightnessInfo(PlayerManager.VBtype type, int progress, int lenght) {
                 showolBrightnessInfo(type, progress, lenght);
             }
 
@@ -120,11 +121,11 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
             vbSeekbar = (SeekBar) findViewById(R.id.player_vod_brightness_seek);
         }
 
-        if (VBtype.VOL == type && 0 == progress)
+        if (PlayerManager.VBtype.VOL == type && 0 == progress)
             vbImageView.setImageResource(R.drawable.icon_voice_no);
-        else if (VBtype.VOL == type && progress > 0)
+        else if (PlayerManager.VBtype.VOL == type && progress > 0)
             vbImageView.setImageResource(R.drawable.icon_voice);
-        else if (VBtype.BRIGHTNESS == type && 0 == progress)
+        else if (PlayerManager.VBtype.BRIGHTNESS == type && 0 == progress)
             vbImageView.setImageResource(R.drawable.icon_light_no);
         else
             vbImageView.setImageResource(R.drawable.icon_light);
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
                         .player_forward_rewind_text);
             }
         } else {
-            if (FRtype.INCREASE == type)
+            if (PlayerManager.FRtype.INCREASE == type)
                 forwardRewindImageView.setImageResource(R.drawable.play_kuaijin);
             else
                 forwardRewindImageView.setImageResource(R.drawable.play_kuaitui);
@@ -237,6 +238,6 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        logger.d("onConfigurationChanged");
+        LogUtils.d("onConfigurationChanged");
     }
 }

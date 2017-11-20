@@ -1,14 +1,14 @@
-package com.tools.xxf.ijkplayer.ui
+package com.tools.xxf.ijkplayer.ui.ijkplayer
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import com.tools.xxf.ijklib.common.MediaController
+import com.tools.xxf.ijklib.common.PlayerManager
+import com.tools.xxf.ijklib.media.IjkVideoView
 
 import com.tools.xxf.ijkplayer.R
-import com.tools.xxf.ijkplayer.common.MediaController
-import com.tools.xxf.ijkplayer.common.PlayerManager
-import com.tools.xxf.ijkplayer.widget.media.IjkVideoView
 
 /**
  * TODO: 播放器简单案例
