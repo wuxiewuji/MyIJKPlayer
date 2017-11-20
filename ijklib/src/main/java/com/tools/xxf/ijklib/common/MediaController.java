@@ -18,6 +18,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -26,12 +27,14 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.TimeUtils;
+import com.blankj.utilcode.util.Utils;
 import com.tools.xxf.ijklib.R;
 import com.tools.xxf.ijklib.media.IMediaController;
 import com.tools.xxf.ijklib.utils.AndroidDevices;
 import com.tools.xxf.ijklib.utils.AndroidUtil;
-import com.tools.xxf.ijklib.utils.MyLogger;
-import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 
 import static com.tools.xxf.ijklib.utils.TimeUtils.stringForTime;
@@ -46,7 +49,6 @@ import static com.tools.xxf.ijklib.utils.TimeUtils.stringForTime;
 public class MediaController extends RelativeLayout implements IMediaController {
     private final int HIDE_Controller = 0;
     public static final String TAG = "MediaController";
-    MyLogger logger = MyLogger.getXiongFengLog();
     private ArrayList<View> childs = new ArrayList<>();
     private RelativeLayout topLn;//顶部控件
     private LinearLayout bottomLn;//底部控件
@@ -131,8 +133,6 @@ public class MediaController extends RelativeLayout implements IMediaController 
         childs.add(addBtn);
         childs.add(shareBtn);
         initListener();
-        int height = getHeight();
-        Log.i(TAG, "height=" + height);
     }
 
     //监听事件,通过控件的触摸事件,拦截事件发送到父布局,并处理当前控件的点击事件
@@ -243,8 +243,9 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     //关闭当前控件
     private void hideController() {
-        if (isFull)
-            dimStatusBar(true);
+        dimStatusBar(true);
+        setWith();//设置控件的宽度
+
         AnimatorSet animatorSet = new AnimatorSet();//组合动画
         ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 1f, 0f);
         ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), -topLn
@@ -262,39 +263,39 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     //开启当前控件
     public void showController() {
-
-        if (isFull) {
-            dimStatusBar(false);
-        }
-
+        dimStatusBar(false);
         AnimatorSet animatorSet = new AnimatorSet();//组合动画
         ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 0f, 1f);
         ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), topLn
                 .getTop());
-
         ObjectAnimator translationDown = ObjectAnimator.ofFloat(bottomLn, "Y", bottomLn.getY(),
                 getHeight() - bottomLn.getHeight());
-
         animatorSet.setDuration(300);
         animatorSet.setInterpolator(new DecelerateInterpolator());
         animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
         animatorSet.start();
     }
-
     /**
-     * dip 转 px
+     * 获取状态栏高度
+     * <p>0代表不存在</p>
      *
-     * @param dip
-     * @return
+     * @return 导航栏高度
      */
-    public int dip2px(int dip) {
-        //
-        // 公式： dp = px / (dpi / 160) px = dp * (dpi / 160)
-        // dp = px / denisity
-        // px = dp * denisity;
-        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        float density = metrics.density;
-        return (int) (dip * density + 0.5f);
+    public static int getNavBarHeight() {
+        Resources res = Utils.getApp().getResources();
+        int resourceId = res.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId != 0) {
+            return res.getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
+        }
+    }
+
+    private void setMaginTop() {
+        int height = getNavBarHeight();
+        LogUtils.d(height);
+        RelativeLayout.LayoutParams params = (LayoutParams) topLn.getLayoutParams();
+        params.topMargin=height+12;
     }
 
     /**
@@ -303,8 +304,9 @@ public class MediaController extends RelativeLayout implements IMediaController 
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void dimStatusBar(boolean dim) {
-        logger.i("dimStatusBar=" + dim);
-
+        if (!isFull) {
+            return;
+        }
         if (!AndroidUtil.isHoneycombOrLater)
             return;
         int visibility = 0;
@@ -337,8 +339,10 @@ public class MediaController extends RelativeLayout implements IMediaController 
                 visibility |= View.STATUS_BAR_VISIBLE;
         }
 
+
         if (AndroidDevices.hasNavBar())
             visibility |= navbar;
+
         ((Activity) mContext).getWindow().getDecorView().setSystemUiVisibility(visibility);
     }
 
@@ -468,25 +472,29 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     @Override
     public void showOnce(View view) {
-
+        ViewGroup.LayoutParams params = this.getLayoutParams();
+        params.width = view.getWidth();
     }
 
     @Override
     public void setFull(boolean isFull) {
         this.isFull = isFull;
-        if (topLn != null) {
-            LayoutParams params = (LayoutParams) topLn.getLayoutParams();
-            if (isScreenOriatationPortrait(mContext)){
-                params.topMargin = dip2px(12 + 36);
-                dimStatusBar(false);
-            }else {
-                params.topMargin = dip2px(12+24);
-            }
-        }
+        if (isFull)
+            dimStatusBar(false);
+
+        setWith();
+        setMaginTop();//设置控件的高度
     }
-    public static boolean isScreenOriatationPortrait(Context context) {
-        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+    private void setWith() {
+        Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int screenWidth = metrics.widthPixels;
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.width = screenWidth;
     }
+
     private void doPauseResume() {
         if (mPlayer != null)
             if (mPlayer.isPlaying()) {

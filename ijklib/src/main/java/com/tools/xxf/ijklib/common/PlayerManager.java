@@ -16,12 +16,13 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.tools.xxf.ijklib.R;
 import com.tools.xxf.ijklib.media.IMediaController;
 import com.tools.xxf.ijklib.media.IRenderView;
 import com.tools.xxf.ijklib.media.IjkVideoView;
 import com.tools.xxf.ijklib.media.Permissions;
-import com.tools.xxf.ijklib.utils.MyLogger;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -37,7 +38,6 @@ import static com.tools.xxf.ijklib.utils.TimeUtils.stringForTime;
  *         Create Time : 2017/10/30 13:51
  */
 public class PlayerManager {
-    private MyLogger logger = MyLogger.getXiongFengLog();
     /**
      * 可能会剪裁,保持原视频的大小，显示在中心,当原视频的大小超过view的大小超过部分裁剪处理
      */
@@ -132,7 +132,7 @@ public class PlayerManager {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
         if (!playerSupport) {
-            logger.e("播放器不支持此设备");
+            LogUtils.e("播放器不支持此设备");
         }
     }
 
@@ -405,7 +405,7 @@ public class PlayerManager {
         int showDelta = (int) delta / 1000;
         if (showDelta != 0) {
             String text = showDelta > 0 ? ("+" + showDelta) : "" + showDelta;
-            logger.d("onProgressSlide:" + text);
+            LogUtils.d("onProgressSlide:" + text);
         }
 
         FRtype type;
@@ -476,7 +476,7 @@ public class PlayerManager {
 
         float bright = Math.min(Math.max(Math.max(brightness, 0.01f) + delta, 0.01f), 1f);
         setWindowBrightness(bright);
-        logger.d("delta=" + delta + ",brightness=" + brightness + ",bright=" + bright);
+        LogUtils.d("delta=" + delta + ",brightness=" + brightness + ",bright=" + bright);
 
         bright = Math.round(bright * 100);
         if (scrollTextListener != null)
@@ -496,10 +496,10 @@ public class PlayerManager {
      * @param percent
      */
     private void onVolumeSlide(float percent) {
-        logger.i("doVolumeTouch");
+        LogUtils.i("doVolumeTouch");
         int vod = (int) (percent * mMaxVolume) + volume;
 
-        logger.i("vod" + vod + ",percent=" + percent);
+        LogUtils.i("vod" + vod + ",percent=" + percent);
 
         if (vod > mMaxVolume) {
             vod = mMaxVolume;
@@ -519,7 +519,7 @@ public class PlayerManager {
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vod, AudioManager.FLAG_SHOW_UI);
         if (scrollTextListener != null)
             scrollTextListener.showVolBrightnessInfo(VBtype.VOL, vod, mMaxVolume);
-        logger.d("onVolumeSlide:" + s);
+        LogUtils.d("onVolumeSlide:" + s);
     }
 
     /*********************各种监听相关****************************************/
@@ -566,12 +566,12 @@ public class PlayerManager {
     private void statusChange(int newStatus) {
         status = newStatus;
         if (!isLive && newStatus == STATUS_COMPLETED) {
-            logger.d("statusChange STATUS_COMPLETED...");
+            LogUtils.d("statusChange STATUS_COMPLETED...");
             if (playerStateListener != null) {
                 playerStateListener.onComplete();
             }
         } else if (newStatus == STATUS_ERROR) {
-            logger.d("statusChange STATUS_ERROR...");
+            LogUtils.d("statusChange STATUS_ERROR...");
             if (playerStateListener != null) {
                 playerStateListener.onError();
             }
@@ -580,9 +580,9 @@ public class PlayerManager {
             if (playerStateListener != null) {
                 playerStateListener.onLoading();
             }
-            logger.d("statusChange STATUS_LOADING...");
+            LogUtils.d("statusChange STATUS_LOADING...");
         } else if (newStatus == STATUS_PLAYING) {
-            logger.d("statusChange STATUS_PLAYING...");
+            LogUtils.d("statusChange STATUS_PLAYING...");
             if (playerStateListener != null) {
                 playerStateListener.onPlay();
                 if (controller != null) {
@@ -590,7 +590,7 @@ public class PlayerManager {
                 }
             }
         } else if (newStatus == STATUS_PREPARED) {
-            logger.d("statusChange STATUS_PLAYING...");
+            LogUtils.d("statusChange STATUS_PLAYING...");
             if (playerStateListener != null) {
                 playerStateListener.onPrepared();
                 if (controller != null) {
@@ -602,7 +602,7 @@ public class PlayerManager {
 
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            logger.d("ACTION_UP");
+            LogUtils.d("ACTION_UP");
             if (touchAction == TOUCH_SEEK) {
                 onProgressSlide(percent, true);
             }
@@ -676,7 +676,7 @@ public class PlayerManager {
          */
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            logger.d("onDoubleTap");
+            LogUtils.d("onDoubleTap");
             if (isTouchView && isLockUI)//屏幕锁定才可以进行双击更换屏幕操作
                 videoView.toggleAspectRatio();
 
@@ -688,9 +688,13 @@ public class PlayerManager {
          */
         @Override
         public boolean onDown(MotionEvent e) {
-            logger.d("onDown");
+            LogUtils.d("onDown");
             touchAction = TOUCH_NONE;
-            if (videoView.getX() < e.getRawX() && videoView.getWidth() + videoView.getX() >= e
+
+            if (e.getRawX() >= ScreenUtils.getScreenWidth() - 8) {//屏蔽用户全屏的时候从右边划入
+                isTouchView = false;
+            } else if (videoView.getX() < e.getRawX() && videoView.getWidth() + videoView.getX()
+                    >= e
                     .getRawX() && videoView.getY() < e.getRawY() && videoView.getHeight() +
                     videoView.getY() >= e.getRawY()) {
                 isTouchView = true;
@@ -699,7 +703,7 @@ public class PlayerManager {
                 volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
                 brightness = lp.screenBrightness;
-                logger.i("onDown" + ",mMaxVolume=" + mMaxVolume + "volume=" + volume + "," +
+                LogUtils.i("onDown" + ",mMaxVolume=" + mMaxVolume + "volume=" + volume + "," +
                         "brightness=" + brightness);
             } else {
                 isTouchView = false;
@@ -748,8 +752,8 @@ public class PlayerManager {
          */
         @Override
         public void onLongPress(MotionEvent e) {
-            logger.d("onLongPress");
-            if (controller != null)
+            LogUtils.d("onLongPress");
+            if (controller != null && isTouchView)
                 if (!controller.isShowing())
                     isLockUI = !isLockUI;
         }
@@ -760,7 +764,7 @@ public class PlayerManager {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Log.i("PlayerGestureListener", "onSingleTapConfirmed");
-            if (controller != null) {
+            if (controller != null && isTouchView) {
                 if (controller.isShowing())
                     controller.hide();
                 else
@@ -818,7 +822,7 @@ public class PlayerManager {
             params.height = playerNormalHeight;
             anchorView.requestLayout();
         }
-        if (null != controller){
+        if (null != controller) {
             controller.setAnchorView(anchorView);
             controller.setFull(fullScreenOnly);
         }
