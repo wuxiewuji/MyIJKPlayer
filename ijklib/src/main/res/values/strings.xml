@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">IJKPlayer</string>
+    <string name="N_A">N/A</string>
+    <string name="vdec">vdec</string>
+    <string name="fps">fps</string>
+    <string name="v_cache">v-cache</string>
+    <string name="a_cache">a-cache</string>
+    <string name="load_cost">load-cost</string>
+    <string name="seek_cost">seek_cost</string>
+    <string name="seek_load_cost">seek_load_cost</string>
+    <string name="tcp_speed">tcp_speed</string>
+    <string name="bit_rate">bit_rate</string>
+
+    <string name="VideoView_ar_aspect_fit_parent">Aspect / Fit parent</string>
+    <string name="VideoView_ar_aspect_fill_parent">Aspect / Fill parent</string>
+    <string name="VideoView_ar_aspect_wrap_content">Aspect / Wrap content</string>
+    <string name="VideoView_ar_match_parent">Free / Fill parent</string>
+    <string name="VideoView_ar_16_9_fit_parent">16:9 / Fit parent</string>
+    <string name="VideoView_ar_4_3_fit_parent">4:3 / Fit parent</string>
+
+    <string name="TrackType_video">Video</string>
+    <string name="TrackType_audio">Audio</string>
+    <string name="TrackType_subtitle">Subtitle</string>
+    <string name="TrackType_timedtext">Timed text</string>
+    <string name="TrackType_metadata">Meta data</string>
+    <string name="TrackType_unknown">Unknown</string>
+
+    <string name="VideoView_player_none">Player: None</string>
+    <string name="VideoView_player_AndroidMediaPlayer">Player: AndroidMediaPlayer</string>
+    <string name="VideoView_player_IjkMediaPlayer">Player: IjkMediaPlayer</string>
+    <string name="VideoView_player_IjkExoMediaPlayer">Player: IjkExoMediaPlayer</string>
+
+    <string name="VideoView_render_none">Render: None</string>
+    <string name="VideoView_render_surface_view">Render: SurfaceView</string>
+    <string name="VideoView_render_texture_view">Render: TextureView</string>
+
+    <string name="VideoView_error_text_invalid_progressive_playback">Invalid progressive playback</string>
+    <string name="VideoView_error_text_unknown">Unknown</string>
+    <string name="VideoView_error_button">OK</string>
+
+    <string name="allow_settings_access_ringtone_title">Allow Motube to set the ringtone</string>
+    <string name="allow_settings_access_ringtone_description">Motube needs you to grant this permission to set up this song as your ringtone.</string>
+    <string name="allow_settings_access_brightness_title">Allow Motube to change brightness mode</string>
+    <string name="allow_settings_access_brightness_description">Motube needs you to grant this permission to change your brightness mode.</string>
+    <string name="permission_ask_again">Grant permission</string>
+
+    <string name="text_replay">Replay</string>
+    <string name="text_play_next">Next</string>
+
+    <string name="text_danmaku_setting_p">P</string>
+    <string name="text_danmaku_setting_c">C</string>
+    <string name="text_danmaku_setting_t">T</string>
+
+
+    <!-- Shown on transport control of lockscreen. Pressing button goes to previous track. -->
+    <string name="lockscreen_transport_prev_description">Previous track</string>
+    <!-- Shown on transport control of lockscreen. Pressing button goes to next track. -->
+    <string name="lockscreen_transport_next_description">Next track</string>
+    <!-- Shown on transport control of lockscreen. Pressing button pauses playback -->
+    <string name="lockscreen_transport_pause_description">Pause</string>
+    <!-- Shown on transport control of lockscreen. Pressing button pauses playback -->
+    <string name="lockscreen_transport_play_description">Play</string>
+    <!-- Shown on transport control of lockscreen. Pressing button pauses playback -->
+    <string name="lockscreen_transport_stop_description">Stop</string>
+    <!-- Shown on transport control screens. Pressing button rewinds playback [CHAR LIMIT=NONE]-->
+    <string name="lockscreen_transport_rew_description">Rewind</string>
+    <!-- Shown on transport control screens. Pressing button fast forwards playback [CHAR LIMIT=NONE]-->
+    <string name="lockscreen_transport_ffw_description">Fast forward</string>
+
+    <string name="unseekable_stream">Unseekable stream</string>
+</resources>

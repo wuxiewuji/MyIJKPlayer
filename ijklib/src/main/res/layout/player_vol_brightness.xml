@@ -1,0 +1,28 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_vol_brightness_root"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/player_vol_brightness_layout_height"
+    android:background="@drawable/shape_vol_brightness_bg"
+    >
+
+    <ImageView
+        android:id="@+id/player_vol_brightness_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/player_vol_brightness_padding"
+        />
+
+    <SeekBar
+        android:id="@+id/player_vod_brightness_seek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/player_vol_brightness_padding"
+        android:maxHeight="4dp"
+        android:minHeight="2dp"
+        android:progressDrawable="@drawable/seek_progress_dra"
+        />
+
+</LinearLayout>

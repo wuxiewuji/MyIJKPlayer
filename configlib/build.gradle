@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.android.support:appcompat-v7:26.+'
+    //ijk播放控件 --ijklib mode需要
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.4'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.4'
+    //ijk弹幕播放控件 --danmulib mode需要
+    compile 'com.github.ctiao:DanmakuFlameMaster:0.9.12'
+    compile 'com.github.ctiao:ndkbitmap-armv7a:0.9.12'
+    compile 'com.github.ctiao:ndkbitmap-armv5:0.9.12'
+    compile 'com.github.ctiao:ndkbitmap-x86:0.9.12'
+    //日志打印库
+    compile 'com.orhanobut:logger:2.1.1'
+    //字体图标
+    compile 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+
+    //网络请求依赖
+    compile 'com.squareup.okio:okio:1.13.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    //工具包
+    compile 'com.blankj:utilcode:1.9.8'
+}

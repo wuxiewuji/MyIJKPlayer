@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/ffplayer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:fitsSystemWindows="false">
+
+        <com.tools.xxf.ijkplayer.widget.media.IjkVideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <com.tools.xxf.ijkplayer.common.MediaController
+            android:id="@+id/media_controller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <android.support.v7.widget.ViewStubCompat
+            android:id="@+id/player_forward_rewind_stub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/player_forward_rewind"
+            android:visibility="gone"
+           />
+
+        <android.support.v7.widget.ViewStubCompat
+            android:id="@+id/player_vol_brightness_stub"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/player_vol_brightness_layout_height"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/player_vol_brightness_layout_margin_top"
+            android:layout_marginLeft="@dimen/player_vol_brightness_layout_margin_left"
+            android:layout_marginRight="@dimen/player_vol_brightness_layout_margin_left"
+            android:layout_marginTop="@dimen/player_vol_brightness_layout_margin_top"
+            android:layout="@layout/player_vol_brightness"
+            android:visibility="gone"
+            />
+    </FrameLayout>
+
+</LinearLayout>
