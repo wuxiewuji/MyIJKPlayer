@@ -1,22 +1,23 @@
 package com.tools.xxf.ijkplayer.ui.ijkplayer;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ViewStubCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.tools.xxf.ijklib.common.MediaController;
 import com.tools.xxf.ijklib.common.PlayerManager;
 import com.tools.xxf.ijklib.media.IjkVideoView;
-import com.tools.xxf.ijklib.utils.MyLogger;
 import com.tools.xxf.ijkplayer.R;
 
 /**
@@ -26,7 +27,7 @@ import com.tools.xxf.ijkplayer.R;
  */
 public class MainActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener {
     public static final String TAG = "PlayerManager";
-    public MyLogger logger = MyLogger.getXiongFengLog();
+    private static final String URL="http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8";
     private IjkVideoView videoView;
     private PlayerManager player;
     private MediaController mediaController;
@@ -52,10 +53,9 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
         player.setMediaController(mediaController);
         player.setScaleType(PlayerManager.SCALETYPE_FILLPARENT);
         player.setPlayerStateListener(this);
-        player.play("http://118.123.164.114/6563BECB7A31713372922FEB/03000A07005A08169A0CD1011BA6A9D4E0BDC9-C4CC-7FFA-0E3D-3DAD2404112A.mp4?ali_redirect_domain=vali-dns.cp31.ott.cibntv.net&ccode=0502&duration=391&expire=18000&psid=d7ccee34273d6b877d1a6776dc826aa7&ups_client_netip=65ccf74b&ups_ts=1511166202&ups_userid=&utid=JGxFEZ5Q1FUCAWXM90vyinw8&vid=XMzA5NzkxNTYzMg%3D%3D&vkey=A1652dc1b822ebc1a3a58d021fb9dc8c4");
+        player.play(URL);
 
         initListener();
-
     }
 
     //监听事件
@@ -69,7 +69,12 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
 
                 @Override
                 public void danmuClick(View v) {
+                    Display display = getWindowManager().getDefaultDisplay();
 
+                    int screenWidth = display.getWidth();
+                    int screenHeight = ScreenUtils.getScreenHeight();
+                    int navBarHeight = BarUtils.getNavBarHeight();
+                    LogUtils.a("screenWidth="+screenWidth+",screenHeight="+screenHeight+",=navBarHeight"+navBarHeight);
                 }
 
                 @Override
@@ -109,6 +114,13 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
                     forwardRewindView.setVisibility(View.INVISIBLE);
             }
 
+        });
+
+        player.onError(new PlayerManager.OnErrorListener() {
+            @Override
+            public void onError(int what, int extra) {
+                LogUtils.d(what+","+extra);
+            }
         });
     }
 
@@ -173,28 +185,28 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
     /*********播放器监听*******************************/
     @Override
     public void onPrepared() {//播放器准备完成
-        logger.d("onPrepared");
+        LogUtils.d("onPrepared");
         player.start();
     }
 
     @Override
     public void onLoading() {
-        logger.d("onLoading");
+        LogUtils.d("onLoading");
     }
 
     @Override
     public void onPlay() {
-        logger.d("onPlay");
+        LogUtils.d("onPlay");
     }
 
     @Override
     public void onError() {
-        logger.d("onPlay");
+        LogUtils.d("onError");
     }
 
     @Override
     public void onComplete() {
-        logger.d("onComplete");
+        LogUtils.d("onComplete");
         mediaController.show(0);
     }
 
