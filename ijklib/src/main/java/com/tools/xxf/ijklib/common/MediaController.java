@@ -27,13 +27,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.TimeUtils;
-import com.blankj.utilcode.util.Utils;
 import com.tools.xxf.ijklib.R;
 import com.tools.xxf.ijklib.media.IMediaController;
-import com.tools.xxf.ijklib.utils.AndroidDevices;
-import com.tools.xxf.ijklib.utils.AndroidUtil;
 
 import java.util.ArrayList;
 
@@ -243,9 +238,8 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     //关闭当前控件
     private void hideController() {
-        dimStatusBar(true);
         setWith();//设置控件的宽度
-
+        dimStatusBar(false);
         AnimatorSet animatorSet = new AnimatorSet();//组合动画
         ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 1f, 0f);
         ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), -topLn
@@ -263,7 +257,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     //开启当前控件
     public void showController() {
-        dimStatusBar(false);
+        dimStatusBar(true);
         AnimatorSet animatorSet = new AnimatorSet();//组合动画
         ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 0f, 1f);
         ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), topLn
@@ -275,76 +269,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
         animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
         animatorSet.start();
     }
-    /**
-     * 获取状态栏高度
-     * <p>0代表不存在</p>
-     *
-     * @return 导航栏高度
-     */
-    public static int getNavBarHeight() {
-        Resources res = Utils.getApp().getResources();
-        int resourceId = res.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId != 0) {
-            return res.getDimensionPixelSize(resourceId);
-        } else {
-            return 0;
-        }
-    }
 
-    private void setMaginTop() {
-        int height = getNavBarHeight();
-        LogUtils.d(height);
-        RelativeLayout.LayoutParams params = (LayoutParams) topLn.getLayoutParams();
-        params.topMargin=height+12;
-    }
-
-    /**
-     * Dim the status bar and/or navigation icons when needed on Android 3.x.
-     * Hide it on Android 4.0 and later
-     */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void dimStatusBar(boolean dim) {
-        if (!isFull) {
-            return;
-        }
-        if (!AndroidUtil.isHoneycombOrLater)
-            return;
-        int visibility = 0;
-        int navbar = 0;
-
-        if (AndroidUtil.isJellyBeanOrLater) {
-            visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-            if (isFull)
-                navbar = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-        }
-        if (dim) {
-            ((Activity) mContext).getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            if (AndroidUtil.isICSOrLater)
-                navbar |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
-            else
-                visibility |= View.STATUS_BAR_HIDDEN;
-            if (!AndroidDevices.hasCombBar()) {
-                navbar |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-                if (AndroidUtil.isKitKatOrLater)
-                    visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-                if (AndroidUtil.isJellyBeanOrLater)
-                    visibility |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-            }
-        } else {
-            ((Activity) mContext).getWindow().clearFlags(WindowManager.LayoutParams
-                    .FLAG_FULLSCREEN);
-            if (AndroidUtil.isICSOrLater)
-                visibility |= View.SYSTEM_UI_FLAG_VISIBLE;
-            else
-                visibility |= View.STATUS_BAR_VISIBLE;
-        }
-
-
-        if (AndroidDevices.hasNavBar())
-            visibility |= navbar;
-
-        ((Activity) mContext).getWindow().getDecorView().setSystemUiVisibility(visibility);
-    }
 
     @Override
     public void hide() {
@@ -479,11 +404,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
     @Override
     public void setFull(boolean isFull) {
         this.isFull = isFull;
-        if (isFull)
-            dimStatusBar(false);
-
         setWith();
-        setMaginTop();//设置控件的高度
     }
 
     private void setWith() {
@@ -493,6 +414,32 @@ public class MediaController extends RelativeLayout implements IMediaController 
         int screenWidth = metrics.widthPixels;
         ViewGroup.LayoutParams params = getLayoutParams();
         params.width = screenWidth;
+    }
+
+    /**
+     * Dim the status bar and/or navigation icons when needed on Android 3.x.
+     * Hide it on Android 4.0 and later
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void dimStatusBar(boolean dim) {
+        if (!isFull) {
+            return;
+        }
+        int uiFlags = 0;
+
+        if (dim) {
+            uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            uiFlags |= 0x00001000;
+        } else {
+            uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            uiFlags |= 0x00001000;
+        }
+
+        ((Activity) mContext).getWindow().getDecorView().setSystemUiVisibility(uiFlags);
     }
 
     private void doPauseResume() {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -196,7 +197,11 @@ public class PlayerManager {
             videoView.setVideoPath(url);
         }
     }
-
+    public void play(Uri url) {
+        if (playerSupport) {
+            videoView.setVideoURI(url);
+        }
+    }
     /**
      * 暂停
      */
