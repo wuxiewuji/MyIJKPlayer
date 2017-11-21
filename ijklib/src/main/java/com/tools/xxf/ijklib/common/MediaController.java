@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
@@ -13,13 +12,11 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.tools.xxf.ijklib.R;
 import com.tools.xxf.ijklib.media.IMediaController;
 
@@ -43,7 +41,6 @@ import static com.tools.xxf.ijklib.utils.TimeUtils.stringForTime;
  */
 public class MediaController extends RelativeLayout implements IMediaController {
     private final int HIDE_Controller = 0;
-    public static final String TAG = "MediaController";
     private ArrayList<View> childs = new ArrayList<>();
     private RelativeLayout topLn;//顶部控件
     private LinearLayout bottomLn;//底部控件
@@ -72,6 +69,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
     private float movey;
     private double moves;
     private boolean isFull;
+    private int height;
 
     public MediaController(Context context) {
         this(context, null);
@@ -97,7 +95,6 @@ public class MediaController extends RelativeLayout implements IMediaController 
         mPauseDescription = res
                 .getText(R.string.lockscreen_transport_pause_description);
 
-
         topLn = findViewById(R.id.top_ln);
         playBack = findViewById(R.id.video_back);
         showDanMu = findViewById(R.id.video_danmaku);
@@ -117,7 +114,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 show(0);
-                Log.i(TAG, "bottomLn onTouch");
+                LogUtils.a( "bottomLn onTouch");
                 return true;
             }
         });
@@ -206,8 +203,6 @@ public class MediaController extends RelativeLayout implements IMediaController 
             if (null != mediaListener) {
                 mediaListener.fullClick(v);
             }
-
-        } else {
         }
     }
 
@@ -257,17 +252,29 @@ public class MediaController extends RelativeLayout implements IMediaController 
 
     //开启当前控件
     public void showController() {
+        LogUtils.a(getHeight());
         dimStatusBar(true);
-        AnimatorSet animatorSet = new AnimatorSet();//组合动画
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 0f, 1f);
-        ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), topLn
-                .getTop());
-        ObjectAnimator translationDown = ObjectAnimator.ofFloat(bottomLn, "Y", bottomLn.getY(),
-                getHeight() - bottomLn.getHeight());
-        animatorSet.setDuration(300);
-        animatorSet.setInterpolator(new DecelerateInterpolator());
-        animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
-        animatorSet.start();
+        if (!topLn.isShown()){
+            topLn.setVisibility(VISIBLE);
+            bottomLn.setVisibility(VISIBLE);
+        }else {
+            AnimatorSet animatorSet = new AnimatorSet();//组合动画
+            ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 0f, 1f);
+            ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y",
+                    0,
+                    topLn.getTop()
+            );
+            ObjectAnimator translationDown = ObjectAnimator.ofFloat(
+                    bottomLn,
+                    "Y",
+                    this.getHeight(),
+                    getHeight() - bottomLn.getHeight()
+            );
+            animatorSet.setDuration(300);
+            animatorSet.setInterpolator(new DecelerateInterpolator());
+            animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
+            animatorSet.start();
+        }
     }
 
 
@@ -280,7 +287,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
                 hideController();
 
             } catch (IllegalArgumentException ex) {
-                Log.w("MediaController", "already removed");
+                LogUtils.d(ex.getMessage());
             }
             mShowing = false;
         }
@@ -295,13 +302,14 @@ public class MediaController extends RelativeLayout implements IMediaController 
     //此处可手动设置当前布局的大小
     @Override
     public void setAnchorView(View view) {
-
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        height = params.height;
     }
 
     @Override
     public void setMediaPlayer(android.widget.MediaController.MediaPlayerControl player) {
         mPlayer = player;
-        Log.d(TAG, "setMediaPlayer");
+        LogUtils.a( "setMediaPlayer");
         updatePausePlay();
     }
 
@@ -311,7 +319,6 @@ public class MediaController extends RelativeLayout implements IMediaController 
             showController();
             mShowing = true;
         }
-
         setProgress();
         updatePausePlay();
         post(mShowProgress);
@@ -351,7 +358,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
         public void onStopTrackingTouch(SeekBar bar) {
             mDragging = false;
             setProgress();
-            Log.d(TAG, "onStopTrackingTouch");
+            LogUtils.a( "onStopTrackingTouch");
             show(sDefaultTimeout);
             post(mShowProgress);
         }
@@ -431,11 +438,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
             uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             uiFlags |= 0x00001000;
         } else {
-            uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
+             uiFlags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |View.INVISIBLE;
             uiFlags |= 0x00001000;
         }
 

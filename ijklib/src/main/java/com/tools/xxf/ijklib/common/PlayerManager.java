@@ -846,7 +846,6 @@ public class PlayerManager {
                 activity.getWindow().setAttributes(attrs);
                 activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             }
-            activity.getWindowManager().getDefaultDisplay().getMetrics(screen);
         }
     }
 

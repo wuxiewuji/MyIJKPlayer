@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout="@layout/player_forward_rewind"
             android:visibility="gone"
-           />
+            />
 
         <android.support.v7.widget.ViewStubCompat
             android:id="@+id/player_vol_brightness_stub"
@@ -46,6 +46,13 @@
             android:layout_marginTop="@dimen/player_vol_brightness_layout_margin_top"
             android:layout="@layout/player_vol_brightness"
             android:visibility="gone"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             />
     </FrameLayout>
 

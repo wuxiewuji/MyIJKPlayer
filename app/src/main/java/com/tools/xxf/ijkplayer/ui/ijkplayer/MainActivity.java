@@ -9,6 +9,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
     private View forwardRewindView;
     private ImageView forwardRewindImageView;
     private TextView forwardRewindText;
+    private ProgressBar mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +49,14 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
         setContentView(R.layout.activity_main);
 
         videoView = (IjkVideoView) findViewById(R.id.video_view);
+        mProgress = (ProgressBar) findViewById(R.id.progress);
         mediaController = (MediaController) findViewById(R.id.media_controller);
-
         player = new PlayerManager(this, videoView);
         player.setMediaController(mediaController);
         player.setScaleType(PlayerManager.SCALETYPE_FILLPARENT);
         player.setPlayerStateListener(this);
         player.play(URL);
-
+        mProgress.setVisibility(View.VISIBLE);
         initListener();
     }
 
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
                 LogUtils.d(what+","+extra);
             }
         });
+
     }
 
     private void showolBrightnessInfo(PlayerManager.VBtype type, int progress, int lenght) {
@@ -187,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
     public void onPrepared() {//播放器准备完成
         LogUtils.d("onPrepared");
         player.start();
+        mProgress.setVisibility(View.GONE);
     }
 
     @Override
