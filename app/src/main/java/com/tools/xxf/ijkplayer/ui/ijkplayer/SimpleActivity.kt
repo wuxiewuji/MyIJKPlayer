@@ -22,7 +22,7 @@ class SimpleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_simple)
-        videoView = findViewById(R.id.video_view) as IjkVideoView
+        videoView = findViewById(R.id.video_view)
 
         player = PlayerManager(this, videoView)
         player?.play("http://221.4.223.101:8000/media/49_720p.flv")

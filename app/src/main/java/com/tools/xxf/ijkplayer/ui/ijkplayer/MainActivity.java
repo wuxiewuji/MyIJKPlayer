@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
 
         ViewStubCompat vs = (ViewStubCompat) findViewById(R.id.player_vol_brightness_stub);
         if (vs != null) {
-            vbView = vs.inflate();
             vbImageView = (ImageView) findViewById(R.id.player_vol_brightness_image);
             vbSeekbar = (SeekBar) findViewById(R.id.player_vod_brightness_seek);
         }
