@@ -28,7 +28,8 @@ import com.tools.xxf.ijkplayer.R;
  */
 public class MainActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener {
     public static final String TAG = "PlayerManager";
-    private static final String URL="http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8";
+    private static final String URL="rtmp://live.hkstv.hk.lxdns.com/live/hks";
+//    private static final String URL="http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8";
     private IjkVideoView videoView;
     private PlayerManager player;
     private MediaController mediaController;
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
 
         ViewStubCompat vs = (ViewStubCompat) findViewById(R.id.player_vol_brightness_stub);
         if (vs != null) {
+            vbView = vs.inflate();
             vbImageView = (ImageView) findViewById(R.id.player_vol_brightness_image);
             vbSeekbar = (SeekBar) findViewById(R.id.player_vod_brightness_seek);
         }

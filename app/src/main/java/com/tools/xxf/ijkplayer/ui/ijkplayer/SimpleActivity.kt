@@ -2,8 +2,6 @@ package com.tools.xxf.ijkplayer.ui.ijkplayer
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
 import com.tools.xxf.ijklib.common.MediaController
 import com.tools.xxf.ijklib.common.PlayerManager
 import com.tools.xxf.ijklib.media.IjkVideoView

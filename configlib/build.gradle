@@ -54,4 +54,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
     //工具包
     compile 'com.blankj:utilcode:1.9.8'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
 }
