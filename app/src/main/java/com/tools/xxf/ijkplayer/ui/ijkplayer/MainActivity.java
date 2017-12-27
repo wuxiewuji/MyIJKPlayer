@@ -1,6 +1,10 @@
 package com.tools.xxf.ijkplayer.ui.ijkplayer;
 
+import android.app.Activity;
 import android.content.res.Configuration;
+import android.os.Build;
+import android.service.notification.StatusBarNotification;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ViewStubCompat;
@@ -8,6 +12,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -16,8 +22,10 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
+import com.jaeger.library.StatusBarUtil;
 import com.tools.xxf.ijklib.common.MediaController;
 import com.tools.xxf.ijklib.common.PlayerManager;
+import com.tools.xxf.ijklib.media.AndroidMediaController;
 import com.tools.xxf.ijklib.media.IjkVideoView;
 import com.tools.xxf.ijkplayer.R;
 
@@ -26,9 +34,11 @@ import com.tools.xxf.ijkplayer.R;
  * @author XXF
  * Create Time : 2017/11/1 15:11
  */
-public class MainActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener {
+public class MainActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener ,ViewTreeObserver.OnGlobalLayoutListener{
     public static final String TAG = "PlayerManager";
-    private static final String URL="rtmp://live.hkstv.hk.lxdns.com/live/hks";
+    private static final String URL="http://117.144.248.49/HDhnws.m3u8?authCode=07110409322147352675&amp;" +
+            "stbId=006001FF0018120000060019F0D49A1&amp;Contentid=6837496099179515295&amp;" +
+            "mos=jbjhhzstsl&amp;livemode=1&amp;channel-id=wasusyt";
 //    private static final String URL="http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8";
     private IjkVideoView videoView;
     private PlayerManager player;
@@ -48,10 +58,12 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setImmerseLayout();
 
         videoView = (IjkVideoView) findViewById(R.id.video_view);
         mProgress = (ProgressBar) findViewById(R.id.progress);
         mediaController = (MediaController) findViewById(R.id.media_controller);
+
         player = new PlayerManager(this, videoView);
         player.setMediaController(mediaController);
         player.setScaleType(PlayerManager.SCALETYPE_FILLPARENT);
@@ -59,6 +71,12 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
         player.play(URL);
         mProgress.setVisibility(View.VISIBLE);
         initListener();
+    }
+    //设置状态栏透明
+    protected void setImmerseLayout() {// view为标题栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+           getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 
     //监听事件
@@ -256,5 +274,10 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         LogUtils.d("onConfigurationChanged");
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        LogUtils.d("onGlobalLayout");
     }
 }

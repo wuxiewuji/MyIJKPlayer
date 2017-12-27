@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.tools.xxf.ijkplayer">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.tools.xxf.ijkplayer">
 
-    <uses-sdk tools:overrideLibrary="tv.danmaku.ijk.media.player_arm64,tv.danmaku.ijk.media.player_x86_64"/>
+    <uses-sdk tools:overrideLibrary="tv.danmaku.ijk.media.player_arm64,tv.danmaku.ijk.media.player_x86_64" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
         android:name=".BaseApplication"
@@ -19,18 +19,17 @@
         <activity
             android:name=".ui.ijkplayer.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ijkplayer.SimpleActivity">
-        </activity>
-        <activity android:name=".ui.fonticon.FontIconDemo">
+        <activity android:name=".ui.ijkplayer.SimpleActivity"></activity>
+        <activity android:name=".ui.fonticon.FontIconDemo"></activity>
 
-        </activity>
     </application>
 
 </manifest>

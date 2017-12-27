@@ -70,6 +70,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
     private double moves;
     private boolean isFull;
     private int height;
+    private float ybottom;
 
     public MediaController(Context context) {
         this(context, null);
@@ -114,7 +115,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 show(0);
-                LogUtils.a( "bottomLn onTouch");
+                LogUtils.a("bottomLn onTouch");
                 return true;
             }
         });
@@ -235,46 +236,19 @@ public class MediaController extends RelativeLayout implements IMediaController 
     private void hideController() {
         setWith();//设置控件的宽度
         dimStatusBar(false);
-        AnimatorSet animatorSet = new AnimatorSet();//组合动画
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 1f, 0f);
-        ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y", topLn.getY(), -topLn
-                .getHeight());
+        topLn.setVisibility(GONE);
+        bottomLn.setVisibility(GONE);
 
-        ObjectAnimator translationDown = ObjectAnimator.ofFloat(bottomLn, "Y", bottomLn.getY(),
-                bottomLn.getY() + bottomLn.getHeight());
-
-        animatorSet.setDuration(300);
-        animatorSet.setInterpolator(new DecelerateInterpolator());
-        animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
-        animatorSet.start();
 
     }
 
     //开启当前控件
     public void showController() {
-        LogUtils.a(getHeight());
+        LogUtils.d("showController");
         dimStatusBar(true);
-        if (!topLn.isShown()){
-            topLn.setVisibility(VISIBLE);
-            bottomLn.setVisibility(VISIBLE);
-        }else {
-            AnimatorSet animatorSet = new AnimatorSet();//组合动画
-            ObjectAnimator alpha = ObjectAnimator.ofFloat(topLn, "alpha", 0f, 1f);
-            ObjectAnimator translationUp = ObjectAnimator.ofFloat(topLn, "Y",
-                    0,
-                    topLn.getTop()
-            );
-            ObjectAnimator translationDown = ObjectAnimator.ofFloat(
-                    bottomLn,
-                    "Y",
-                    this.getHeight(),
-                    getHeight() - bottomLn.getHeight()
-            );
-            animatorSet.setDuration(300);
-            animatorSet.setInterpolator(new DecelerateInterpolator());
-            animatorSet.play(alpha).with(translationUp).with(translationDown);//两个动画同时开始
-            animatorSet.start();
-        }
+        topLn.setVisibility(VISIBLE);
+        bottomLn.setVisibility(VISIBLE);
+
     }
 
 
@@ -303,13 +277,15 @@ public class MediaController extends RelativeLayout implements IMediaController 
     @Override
     public void setAnchorView(View view) {
         ViewGroup.LayoutParams params = view.getLayoutParams();
+        ybottom = view.getY() + params.height;
+        LogUtils.d("ybottom=" + ybottom);
         height = params.height;
     }
 
     @Override
     public void setMediaPlayer(android.widget.MediaController.MediaPlayerControl player) {
         mPlayer = player;
-        LogUtils.a( "setMediaPlayer");
+        LogUtils.a("setMediaPlayer");
         updatePausePlay();
     }
 
@@ -358,7 +334,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
         public void onStopTrackingTouch(SeekBar bar) {
             mDragging = false;
             setProgress();
-            LogUtils.a( "onStopTrackingTouch");
+            LogUtils.a("onStopTrackingTouch");
             show(sDefaultTimeout);
             post(mShowProgress);
         }
@@ -421,6 +397,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
         int screenWidth = metrics.widthPixels;
         ViewGroup.LayoutParams params = getLayoutParams();
         params.width = screenWidth;
+
     }
 
     /**
@@ -429,18 +406,26 @@ public class MediaController extends RelativeLayout implements IMediaController 
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void dimStatusBar(boolean dim) {
-        if (!isFull) {
-            return;
-        }
         int uiFlags = 0;
 
-        if (dim) {
-            uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            uiFlags |= 0x00001000;
+        if (!isFull) {
+            if (dim) {
+                uiFlags = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+                uiFlags |= 0x00001000;
+            } else {
+                uiFlags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.INVISIBLE;
+                uiFlags |= 0x00001000;
+            }
         } else {
-             uiFlags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |View.INVISIBLE;
-            uiFlags |= 0x00001000;
+            if (dim) {
+                uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                uiFlags |= 0x00001000;
+            } else {
+                uiFlags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.INVISIBLE;
+                uiFlags |= 0x00001000;
+            }
         }
+
 
         ((Activity) mContext).getWindow().getDecorView().setSystemUiVisibility(uiFlags);
     }

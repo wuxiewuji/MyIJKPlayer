@@ -33,8 +33,8 @@ public class Configurator {
         return LATTE_CONFIGS;
     }
 
-    private static class Holder {
-        private static final Configurator INSTANCE = new Configurator();
+    public static class Holder {
+        public static final Configurator INSTANCE = new Configurator();
     }
 
     public final void configure() {

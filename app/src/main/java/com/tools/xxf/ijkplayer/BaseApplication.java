@@ -2,6 +2,7 @@ package com.tools.xxf.ijkplayer;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.fonts.IoniconsModule;
@@ -14,6 +15,11 @@ import com.tools.xxf.ijklib.icon.FontIJKModule;
 
 public class BaseApplication extends Application {
 
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
     //应用程序的入口
     @Override
     public void onCreate() {
@@ -24,6 +30,7 @@ public class BaseApplication extends Application {
                 .withIcon(new IoniconsModule())
                 .withIcon(new FontIJKModule())
                 .configure();
+
     }
 
 }

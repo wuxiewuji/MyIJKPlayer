@@ -10,6 +10,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme.IJK.Player.7" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--标题栏颜色-->
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+
+    </style>
+
     <style name="player_end_text">
         <item name="android:textColor">#ffa4a4a4</item>
         <item name="android:gravity">left|center_vertical</item>

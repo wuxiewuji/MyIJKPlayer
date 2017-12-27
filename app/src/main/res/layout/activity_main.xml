@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view"
     android:layout_width="match_parent"
@@ -19,21 +17,20 @@
         <com.tools.xxf.ijklib.media.IjkVideoView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
         <com.tools.xxf.ijklib.common.MediaController
             android:id="@+id/media_controller"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true" />
 
         <android.support.v7.widget.ViewStubCompat
             android:id="@+id/player_forward_rewind_stub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout="@layout/player_forward_rewind"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <android.support.v7.widget.ViewStubCompat
             android:id="@+id/player_vol_brightness_stub"
@@ -45,15 +42,13 @@
             android:layout_marginRight="@dimen/player_vol_brightness_layout_margin_left"
             android:layout_marginTop="@dimen/player_vol_brightness_layout_margin_top"
             android:layout="@layout/player_vol_brightness"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
+            android:layout_gravity="center" />
     </FrameLayout>
 
 </LinearLayout>

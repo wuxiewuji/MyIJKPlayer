@@ -7,6 +7,7 @@ import com.tools.xxf.ijklib.common.PlayerManager
 import com.tools.xxf.ijklib.media.IjkVideoView
 
 import com.tools.xxf.ijkplayer.R
+import com.tools.xxf.ijkplayer.ui.utils.Constant
 
 /**
  * TODO: 播放器简单案例
@@ -23,7 +24,7 @@ class SimpleActivity : AppCompatActivity() {
         videoView = findViewById(R.id.video_view)
 
         player = PlayerManager(this, videoView)
-        player?.play("http://221.4.223.101:8000/media/49_720p.flv")
+        player?.play(Constant.url1)
         player?.start();
 
     }
@@ -44,6 +45,6 @@ class SimpleActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-            player?.onDestroy()
+        player?.onDestroy()
     }
 }

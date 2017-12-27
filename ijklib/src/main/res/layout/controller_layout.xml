@@ -12,7 +12,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
         >
 
         <ImageView
@@ -58,7 +57,6 @@
         android:layout_alignParentBottom="true"
         android:background="@color/overlay_bg_color"
         android:orientation="horizontal"
-        android:visibility="gone"
         >
 
         <ImageView
