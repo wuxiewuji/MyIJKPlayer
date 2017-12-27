@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -413,7 +414,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
                 uiFlags = View.SYSTEM_UI_FLAG_LOW_PROFILE;
                 uiFlags |= 0x00001000;
             } else {
-                uiFlags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.INVISIBLE;
+                uiFlags =  View.INVISIBLE;
                 uiFlags |= 0x00001000;
             }
         } else {
