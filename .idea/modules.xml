@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/IJKPlayer.iml" filepath="$PROJECT_DIR$/IJKPlayer.iml" />
+      <module fileurl="file://E:\my_app\MyIJKPlayer\IJKPlayer.iml" filepath="E:\my_app\MyIJKPlayer\IJKPlayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyIJKPlayer.iml" filepath="$PROJECT_DIR$/MyIJKPlayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\my_app\MyIJKPlayer\app\app.iml" filepath="E:\my_app\MyIJKPlayer\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/configlib/configlib.iml" filepath="$PROJECT_DIR$/configlib/configlib.iml" />
+      <module fileurl="file://E:\my_app\MyIJKPlayer\configlib\configlib.iml" filepath="E:\my_app\MyIJKPlayer\configlib\configlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/ijklib/ijklib.iml" filepath="$PROJECT_DIR$/ijklib/ijklib.iml" />
+      <module fileurl="file://E:\my_app\MyIJKPlayer\ijklib\ijklib.iml" filepath="E:\my_app\MyIJKPlayer\ijklib\ijklib.iml" />
     </modules>
   </component>
 </project>

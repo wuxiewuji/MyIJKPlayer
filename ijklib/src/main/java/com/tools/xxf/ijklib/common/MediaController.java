@@ -285,7 +285,7 @@ public class MediaController extends RelativeLayout implements IMediaController 
     @Override
     public void setMediaPlayer(android.widget.MediaController.MediaPlayerControl player) {
         mPlayer = player;
-        LogUtils.a("setMediaPlayer");
+        LogUtils.d("setMediaPlayer");
         updatePausePlay();
     }
 
