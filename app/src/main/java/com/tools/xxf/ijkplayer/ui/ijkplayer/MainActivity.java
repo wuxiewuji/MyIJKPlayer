@@ -24,14 +24,12 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
-import com.jaeger.library.StatusBarUtil;
+import com.orhanobut.logger.Logger;
 import com.tools.xxf.ijklib.common.MediaController;
 import com.tools.xxf.ijklib.common.PlayerManager;
-import com.tools.xxf.ijklib.media.AndroidMediaController;
 import com.tools.xxf.ijklib.media.IjkVideoView;
 import com.tools.xxf.ijkplayer.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -40,8 +38,7 @@ import java.util.HashMap;
  * @author XXF
  *         Create Time : 2017/11/1 15:11
  */
-public class MainActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener, ViewTreeObserver.OnGlobalLayoutListener {
-    public static final String TAG = "PlayerManager";
+public class MainActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener{
     private static final String URL = "http://117.144.248.49/HDhnws.m3u8?authCode=07110409322147352675&amp;" +
             "stbId=006001FF0018120000060019F0D49A1&amp;Contentid=6837496099179515295&amp;" +
             "mos=jbjhhzstsl&amp;livemode=1&amp;channel-id=wasusyt";
@@ -312,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
 
     @Override
     public void onBack() {
-        Log.i(TAG, "竖屏的时候,点击让我回到上一页");
+        Logger.d( "竖屏的时候,点击让我回到上一页");
         finish();
     }
 
@@ -353,8 +350,4 @@ public class MainActivity extends AppCompatActivity implements PlayerManager.Pla
         LogUtils.d("onConfigurationChanged");
     }
 
-    @Override
-    public void onGlobalLayout() {
-        LogUtils.d("onGlobalLayout");
-    }
 }
